@@ -1,15 +1,32 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import {SafeAreaView,ScrollView,Image,StyleSheet,Text,View,TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 
 export const HomeScreen = () => {
 
-  const WakeUpPC = () => {
-
-    alert("Pressed");
-    console.log("pressed");
-  
+  const WakeUpPC = async () => {
+    let user = await AsyncStorage.getItem('@AuthData');
+    var user_json = JSON.parse(user);
+    
+    try {
+        const response = await fetch(
+          'http://rooper-vpn.ddns.net:8090/wakeup', {
+            headers: {
+                'Authorization': user_json.token,
+                'Content-Type': 'application/json'
+            }
+          }
+        );
+        const res = await response;
+        alert("Erfolgreich gestartet!");
+    
+      } catch (error) {
+        console.error(error);
+        alert("Error");
+      }
   }
 
   return (

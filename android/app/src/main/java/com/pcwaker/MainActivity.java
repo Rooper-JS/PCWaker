@@ -1,4 +1,4 @@
-package com.pcwaker;
+package com.rooper.pcwaker;
 
 import com.facebook.react.ReactActivity;
 

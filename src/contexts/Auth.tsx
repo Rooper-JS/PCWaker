@@ -1,5 +1,6 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import * as Keychain from 'react-native-keychain';
 
 import {AuthData, authService} from '../services/authService';
 
@@ -23,19 +24,18 @@ const AuthProvider: React.FC = ({children}) => {
 
   useEffect(() => {
     //Every time the App is opened, this provider is rendered
-    //and call de loadStorage function.
     loadStorageData();
   }, []);
 
   async function loadStorageData(): Promise<void> {
     try {
       //Try get the data from Async Storage
-      const authDataSerialized = await AsyncStorage.getItem('@AuthData');
-      if (authDataSerialized) {
-        //If there are data, it's converted to an Object and the state is updated.
-        const _authData: AuthData = JSON.parse(authDataSerialized);
-        setAuthData(_authData);
-      }
+          // const authDataSerialized = await AsyncStorage.getItem('@AuthData');
+          // if (authDataSerialized) {
+          //   //If there are data, it's converted to an Object and the state is updated.
+          //   const _authData: AuthData = JSON.parse(authDataSerialized);
+          //   setAuthData(_authData);
+          // }
     } catch (error) {
     } finally {
       //loading finished
@@ -44,20 +44,36 @@ const AuthProvider: React.FC = ({children}) => {
   }
 
   const signIn = async () => {
-    //call the service passing credential (email and password).
-    //In a real App this data will be provided by the user from some InputText components.
-    const _authData = await authService.signIn(
-      'lucasgarcez@email.com',
-      '123456',
-    );
+ 
+    // Open Face-Unlock Dialog
+    Keychain.getGenericPassword({service: 'FaceID'}).then(
+     async (result: boolean | {service: string, username: string, password:string}) => {
+        if(!result){
+          console.log('failed')
+        }
+        if(typeof result !== 'boolean'){
+          console.log(result);
+          //Erfolgreicher Face-Unlock
+          const _authData = await authService.signIn(result.username, result.password);
 
-    //Set the data in the context, so the App can be notified
-    //and send the user to the AuthStack
-    setAuthData(_authData);
+          //Set the data in the context, so the App can be notified
+          //and send the user to the AuthStack
+          setAuthData(_authData);
+      
+          //Persist the data in the Async Storage
+          await AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
+        }
 
-    //Persist the data in the Async Storage
-    //to be recovered in the next user session.
-    AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
+      }
+    ).catch(async (error) => {
+      if((await Keychain.getSupportedBiometryType()) === null){
+        return;
+
+      }
+      console.log(error);
+
+    })
+
   };
 
   const signOut = async () => {

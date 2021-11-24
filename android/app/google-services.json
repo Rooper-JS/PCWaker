@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "104562638319",
+    "project_id": "pcwaker",
+    "storage_bucket": "pcwaker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104562638319:android:e75a8abb78e2838c3dca1a",
+        "android_client_info": {
+          "package_name": "com.rooper.pcwaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104562638319-o82hp14fuedo706d6vfk0gpot15qag4g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rooper.pcwaker",
+            "certificate_hash": "b2f8d9c68dcac10e940ddae74b69797b3b65255b"
+          }
+        },
+        {
+          "client_id": "104562638319-mh37is2lf33l7qr166nil7tlqool4rkf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJcsJ1jDSS9SgfQHnKXOZw4C9ioyKncfw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "104562638319-mh37is2lf33l7qr166nil7tlqool4rkf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
