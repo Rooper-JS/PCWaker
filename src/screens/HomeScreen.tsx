@@ -3,10 +3,21 @@ import React from 'react';
 import {SafeAreaView,ScrollView,Image,StyleSheet,Text,View,TouchableOpacity, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {styles} from './styles';
+import Toast from 'react-native-toast-message';
 
 
 export const HomeScreen = () => {
 
+
+  const showToast = async () => {
+    Toast.show({
+      type: 'success',
+      position: 'bottom',
+      text1: 'Erfolgreich',
+      text2: 'Befehl wurde erfolgreich gesendet'
+    });
+  }
+  
   const WakeUpPC = async () => {
 
 
@@ -23,7 +34,7 @@ export const HomeScreen = () => {
           }
         );
         const res = await response;
-        alert("Erfolgreich gestartet!");
+        showToast();
     
       } catch (error) {
         console.error(error);
@@ -39,7 +50,7 @@ export const HomeScreen = () => {
             Rooper-Home starten
           </Text>
           <TouchableOpacity style={styles_local.circle} onPress={WakeUpPC}>
-            <Image source={require("../assets/on_icon.png")} style={styles_local.icon} />
+            <Image source={require("../assets/power-btn.png")} style={styles_local.icon} />
           </TouchableOpacity>
         </View>
       </ImageBackground>

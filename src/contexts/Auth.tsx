@@ -1,6 +1,7 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Keychain from 'react-native-keychain';
+import Toast from 'react-native-toast-message';
 
 import {AuthData, authService} from '../services/authService';
 
@@ -27,6 +28,15 @@ const AuthProvider: React.FC = ({children}) => {
     loadStorageData();
   }, []);
 
+  const showToast = async () => {
+    Toast.show({
+      type: 'error',
+      position: 'bottom',
+      text1: 'Fehlgeschlagen',
+      text2: 'E-Mail und/oder Passwort falsch'
+    });
+  }
+
   async function loadStorageData(): Promise<void> {
     try {
       //Try get the data from Async Storage
@@ -44,9 +54,11 @@ const AuthProvider: React.FC = ({children}) => {
   }
 
   const signIn = async (email?:string, password?:string) => {
-    console.log(email, password);
-    if(email != '' && password != '' && email !=undefined && password !=undefined){
-      console.log("MIIIIIIEEEEESSSSS");
+    if(email == '' || password == ''){
+      await showToast();
+      return;
+    }
+    if(email !=undefined && password !=undefined){
       const _authData = await authService.signIn(email, password);
 
       //Set the data in the context, so the App can be notified
@@ -73,7 +85,6 @@ const AuthProvider: React.FC = ({children}) => {
             console.log('failed')
           }
           if(typeof result !== 'boolean'){
-            console.log(result);
             //Erfolgreicher Face-Unlock
             const _authData = await authService.signIn(result.username, result.password);
 
