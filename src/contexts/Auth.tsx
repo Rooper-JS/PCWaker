@@ -44,8 +44,9 @@ const AuthProvider: React.FC = ({children}) => {
   }
 
   const signIn = async (email?:string, password?:string) => {
-
-    if(email != '' && password != '' && email !='undefined' && password !='undefined'){
+    console.log(email, password);
+    if(email != '' && password != '' && email !=undefined && password !=undefined){
+      console.log("MIIIIIIEEEEESSSSS");
       const _authData = await authService.signIn(email, password);
 
       //Set the data in the context, so the App can be notified
@@ -54,10 +55,17 @@ const AuthProvider: React.FC = ({children}) => {
   
       //Persist the data in the Async Storage
       await AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
+
+      Keychain.setGenericPassword(email, password,{
+        service: 'FaceID',
+        accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY as any,
+        accessible: Keychain.ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY
+      })
+
       return;
     }
     else {
-      
+
       // Open Face-Unlock Dialog
       Keychain.getGenericPassword({service: 'FaceID'}).then(
       async (result: boolean | {service: string, username: string, password:string}) => {

@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {ImageBackground, View, Button, ActivityIndicator} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ImageBackground, View, Button, ActivityIndicator, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {styles} from './styles';
@@ -8,44 +8,60 @@ import {useAuth} from '../contexts/Auth';
 
 import * as Keychain from 'react-native-keychain';
 import { TextInput } from 'react-native-gesture-handler';
-import { Input } from 'react-native-elements';
-
-Keychain.setGenericPassword('julian.seiler@freenet.de', 'Logo0001!',{
-  service: 'FaceID',
-  accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY as any,
-  accessible: Keychain.ACCESSIBLE.WHEN_PASSCODE_SET_THIS_DEVICE_ONLY
-})
+import {  CheckBox, Input } from 'react-native-elements';
 
 
-export class LoginScreen extends React.Component {
-  constructor
-  const [loading, isLoading] = useState(false);
-  const auth = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setpassword] = useState('');
+const auth = useAuth();
 
-  componentDidMount()
+export class LoginScreen extends React.Component <any, any> {
+  state = {
+    loading: false,
+    email: 'julian.seiler@freenet.de',
+    password: 'Logo0001!',
+    checked: false
+  }
 
-  const signIn = async () => {
-    isLoading(true);
-    await auth.signIn(email,password);
+  constructor(props) {
+    super(props)
+    
+  }
+  
+
+  componentDidMount(){
+    setTimeout(() => {
+       this.startLogin();
+    },1000);
+   
+
+  }
+
+  signIn = async () => {
+    this.state.loading = true;
+    await auth.signIn(this.state.email, this.state.password);
   };
 
-  const startLogin = async () => {
+  startLogin = async () => {
     await auth.signIn();
   }
 
+  checkBiometricSensors = async () => {
+    var type = await Keychain.getAllGenericPasswordServices()
+    console.log(type);
+  }
+
+
+ render() {
   return (
     <View style={styles.container}>
      <ImageBackground source={require("../assets/2726461.jpg")} resizeMode="cover" style={styles.image}>
-      {loading ? (
+      {this.state.loading ? (
         <ActivityIndicator color={'#000'} animating={true} size="large" />
       ) : (
       <>
       <View style={styles.inputBoxes}>
         <Input
             placeholder='julian.seiler@freenet.de'
-            value={email}
+            value={this.state.email}
             leftIcon={
               <Icon
                 name='envelope'
@@ -60,7 +76,7 @@ export class LoginScreen extends React.Component {
           />
           <Input
             placeholder='Logo0001!'
-            value={password}
+            value={this.state.password}
             leftIcon={
               <Icon
                 name='lock'
@@ -77,7 +93,9 @@ export class LoginScreen extends React.Component {
           />
       </View>
         <View style={styles.Button}>
-          <Button title="Einloggen" onPress={signIn} />
+
+          <Button title="Einloggen" onPress={this.signIn} />
+         
         </View>
         </>
       )}
@@ -85,4 +103,5 @@ export class LoginScreen extends React.Component {
     </ImageBackground>
     </View>
   );
+  }
 };

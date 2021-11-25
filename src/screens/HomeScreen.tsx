@@ -1,14 +1,15 @@
 
 import React from 'react';
-import {SafeAreaView,ScrollView,Image,StyleSheet,Text,View,TouchableOpacity} from 'react-native';
+import {SafeAreaView,ScrollView,Image,StyleSheet,Text,View,TouchableOpacity, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import {styles} from './styles';
 
 
 export const HomeScreen = () => {
 
   const WakeUpPC = async () => {
 
-    
+
     let user = await AsyncStorage.getItem('@AuthData');
     var user_json = JSON.parse(user);
     
@@ -31,45 +32,49 @@ export const HomeScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.background}>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
+    <View style={styles.container}>
+      <ImageBackground source={require("../assets/2726461.jpg")} resizeMode="cover" style={styles.image}>
         <View>
-          <Text style={styles.font}> 
+          <Text style={styles_local.font}> 
             Rooper-Home starten
           </Text>
-          <TouchableOpacity style={styles.circle} onPress={WakeUpPC}>
-            <Image source={require("../assets/on_icon.png")} style={styles.icon} />
+          <TouchableOpacity style={styles_local.circle} onPress={WakeUpPC}>
+            <Image source={require("../assets/on_icon.png")} style={styles_local.icon} />
           </TouchableOpacity>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </ImageBackground>
+     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles_local = StyleSheet.create({
 
   icon: {
     width: 100,
     height: 100,
     marginRight: "auto",
     marginLeft: "auto",
-    marginTop: 50
+    marginTop: 60,
   },
   circle: {
-    height:200,
-    width: 200,
-    borderRadius: 100,
-    backgroundColor: "blue",
+    height:260,
+    width: 260,
+    borderRadius: 130,
+    borderWidth: 20,
+    borderColor: "rgba(11, 189, 17,0.45)",
+    backgroundColor: "rgba(11, 189, 17,0.2)",
     marginRight: "auto",
     marginLeft: "auto",
-    marginTop: 100
+    marginTop: 6
   },
   font: {
-    fontSize: 30,
+    fontSize: 35,
     fontWeight: "bold",
     marginRight: "auto",
     marginLeft: "auto",
-    marginTop: 30
+    marginTop: -230,
+    top: -70,
+    color: 'white'
     
   },
   background: {
