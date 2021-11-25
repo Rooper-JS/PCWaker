@@ -66,6 +66,7 @@ const styles_local = StyleSheet.create({
     marginRight: "auto",
     marginLeft: "auto",
     marginTop: 60,
+    opacity: 0.9
   },
   circle: {
     height:260,
@@ -76,7 +77,6 @@ const styles_local = StyleSheet.create({
     backgroundColor: "rgba(11, 189, 17,0.2)",
     marginRight: "auto",
     marginLeft: "auto",
-    marginTop: 6
   },
   font: {
     fontSize: 35,
