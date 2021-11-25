@@ -1,13 +1,14 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import {SafeAreaView,ScrollView,Image,StyleSheet,Text,View,TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-
 
 
 export const HomeScreen = () => {
 
   const WakeUpPC = async () => {
+
+    
     let user = await AsyncStorage.getItem('@AuthData');
     var user_json = JSON.parse(user);
     

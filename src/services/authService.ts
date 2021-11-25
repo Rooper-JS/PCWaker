@@ -14,9 +14,6 @@ export type AuthData = {
 
     return new Promise((resolve) => {
 
-        
-
-      
         auth().signInWithEmailAndPassword('julian.seiler@freenet.de', 'Logo0001!')
         .then((res) => {
             console.log(res);

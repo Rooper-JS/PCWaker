@@ -7,7 +7,7 @@ import {AuthData, authService} from '../services/authService';
 type AuthContextData = {
   authData?: AuthData;
   loading: boolean;
-  signIn(): Promise<void>;
+  signIn(email?:string, password?:string): Promise<void>;
   signOut(): void;
 };
 
@@ -43,37 +43,50 @@ const AuthProvider: React.FC = ({children}) => {
     }
   }
 
-  const signIn = async () => {
- 
-    // Open Face-Unlock Dialog
-    Keychain.getGenericPassword({service: 'FaceID'}).then(
-     async (result: boolean | {service: string, username: string, password:string}) => {
-        if(!result){
-          console.log('failed')
-        }
-        if(typeof result !== 'boolean'){
-          console.log(result);
-          //Erfolgreicher Face-Unlock
-          const _authData = await authService.signIn(result.username, result.password);
+  const signIn = async (email?:string, password?:string) => {
 
-          //Set the data in the context, so the App can be notified
-          //and send the user to the AuthStack
-          setAuthData(_authData);
+    if(email != '' && password != '' && email !='undefined' && password !='undefined'){
+      const _authData = await authService.signIn(email, password);
+
+      //Set the data in the context, so the App can be notified
+      //and send the user to the AuthStack
+      setAuthData(_authData);
+  
+      //Persist the data in the Async Storage
+      await AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
+      return;
+    }
+    else {
       
-          //Persist the data in the Async Storage
-          await AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
+      // Open Face-Unlock Dialog
+      Keychain.getGenericPassword({service: 'FaceID'}).then(
+      async (result: boolean | {service: string, username: string, password:string}) => {
+          if(!result){
+            console.log('failed')
+          }
+          if(typeof result !== 'boolean'){
+            console.log(result);
+            //Erfolgreicher Face-Unlock
+            const _authData = await authService.signIn(result.username, result.password);
+
+            //Set the data in the context, so the App can be notified
+            //and send the user to the AuthStack
+            setAuthData(_authData);
+        
+            //Persist the data in the Async Storage
+            await AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
+          }
+
         }
+      ).catch(async (error) => {
+        if((await Keychain.getSupportedBiometryType()) === null){
+          return;
 
-      }
-    ).catch(async (error) => {
-      if((await Keychain.getSupportedBiometryType()) === null){
-        return;
+        }
+        console.log(error);
 
-      }
-      console.log(error);
-
-    })
-
+      })
+    }  
   };
 
   const signOut = async () => {
