@@ -3,20 +3,20 @@ import React from 'react';
 import {SafeAreaView,ScrollView,Image,StyleSheet,Text,View,TouchableOpacity, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {styles} from './styles';
-import Toast from 'react-native-toast-message';
+import { showToast } from '../services/toastService';
 
 
 export const HomeScreen = () => {
 
 
-  const showToast = async () => {
-    Toast.show({
-      type: 'success',
-      position: 'bottom',
-      text1: 'Erfolgreich',
-      text2: 'Befehl wurde erfolgreich gesendet'
-    });
-  }
+  // const showToast = async () => {
+  //   Toast.show({
+  //     type: 'success',
+  //     position: 'bottom',
+  //     text1: 'Erfolgreich',
+  //     text2: 'Befehl wurde erfolgreich gesendet'
+  //   });
+  // }
   
   const WakeUpPC = async () => {
 
@@ -26,7 +26,7 @@ export const HomeScreen = () => {
     
     try {
         const response = await fetch(
-          'http://rooper-vpn.ddns.net:8090/wakeup', {
+          'http://rooper.de:8090/wakeup', {
             headers: {
                 'Authorization': user_json.token,
                 'Content-Type': 'application/json'
@@ -34,11 +34,11 @@ export const HomeScreen = () => {
           }
         );
         const res = await response;
-        showToast();
+        showToast("success", "Erfolgreich!", 'Befehl wurde erfolgreich gesendet');
     
       } catch (error) {
         console.error(error);
-        alert("Error");
+        showToast("error", "Fehlgeschlagen!", 'Fehler: ' + error);
       }
   }
 

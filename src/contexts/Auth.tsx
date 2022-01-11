@@ -4,6 +4,7 @@ import * as Keychain from 'react-native-keychain';
 import Toast from 'react-native-toast-message';
 
 import {AuthData, authService} from '../services/authService';
+import { showToast } from '../services/toastService';
 
 type AuthContextData = {
   authData?: AuthData;
@@ -28,15 +29,6 @@ const AuthProvider: React.FC = ({children}) => {
     loadStorageData();
   }, []);
 
-  const showToast = async () => {
-    Toast.show({
-      type: 'error',
-      position: 'bottom',
-      text1: 'Fehlgeschlagen',
-      text2: 'E-Mail und/oder Passwort falsch'
-    });
-  }
-
   async function loadStorageData(): Promise<void> {
     try {
       //Try get the data from Async Storage
@@ -55,7 +47,7 @@ const AuthProvider: React.FC = ({children}) => {
 
   const signIn = async (email?:string, password?:string) => {
     if(email == '' || password == ''){
-      await showToast();
+      showToast('error','Fehlgeschlagen!','E-Mail und/oder Passwort falsch');
       return;
     }
     if(email !=undefined && password !=undefined){
